@@ -1,7 +1,11 @@
 import pandas as pd
 import nltk
 
-def create_files(input_file = "./input/raw_input.csv", title_output = "id_title.csv", overview_output = "id_overview.csv", genre_output = "id_genre.csv"):
+def create_files(input_file = "./input/raw_input.csv", 
+                 title_output = "id_title.csv", 
+                 overview_output = "id_overview.csv", 
+                 genre_output = "id_genre.csv"):
+    
     data = pd.read_csv(input_file)
 
     data[['id', 'title']].to_csv(title_output, index=False)
@@ -20,7 +24,9 @@ def stem_words(data):
     data['overview'] = data['overview'].apply(lambda x: ' '.join([stemmer.stem(word) for word in x.split()]))
     return data
 
-def preprocess(lemmatize = False, stem = False, input_file = "id_overview.csv", output_file = "overview_preprocessed.csv"):
+def preprocess(lemmatize = False, stem = False, 
+               input_file = "id_overview.csv", 
+               output_file = "overview_preprocessed.csv"):
     data = pd.read_csv(input_file)
 
     overview = data['overview']
@@ -50,7 +56,8 @@ def preprocess(lemmatize = False, stem = False, input_file = "id_overview.csv", 
 
     data.to_csv(output_file, index=False)
 
-def genre_OHE(input_file = "id_genre.csv", output_file = "id_genre_OHE.csv"):
+def genre_OHE(input_file = "id_genre.csv", 
+              output_file = "id_genre_OHE.csv"):
     data = pd.read_csv(input_file)
 
     one_hot_unique = data['genres'].str.get_dummies(sep=',').columns.str.strip().unique()
@@ -60,7 +67,8 @@ def genre_OHE(input_file = "id_genre.csv", output_file = "id_genre_OHE.csv"):
 
     data.to_csv(output_file, index=False)
 
-def create_dict(input_file = "overview_preprocessed.csv", output_file = "dict.csv"):
+def create_dict(input_file = "overview_preprocessed.csv", 
+                output_file = "dict.csv"):
     data = pd.read_csv(input_file)
 
     overview = data['overview']
@@ -75,7 +83,10 @@ def create_dict(input_file = "overview_preprocessed.csv", output_file = "dict.cs
 
     pd.DataFrame(list(dict.items()), columns=['word', 'id']).to_csv(output_file, index=False)
 
-def fill_overview_dict(binary = True, dict_input_file = "dict.csv", overview_input_file = "overview_preprocessed.csv", output_file = "id_filled_dict.csv"):
+def fill_overview_dict(binary = True, 
+                       dict_input_file = "dict.csv", 
+                       overview_input_file = "overview_preprocessed.csv", 
+                       output_file = "id_filled_dict.csv"):
     dict = pd.read_csv(dict_input_file)
 
     words = dict['word']
@@ -113,7 +124,10 @@ def fill_overview_dict(binary = True, dict_input_file = "dict.csv", overview_inp
 
     words_df.to_csv(output_file, index=False)
 
-def create_word2vec(title_input_file = "id_title.csv", genre_input_file = "id_genre_OHE.csv", dict_input_file = "id_filled_dict.csv", output_file = "./output/word2vec.csv"):
+def create_word2vec(title_input_file = "id_title.csv", 
+                    genre_input_file = "id_genre_OHE.csv", 
+                    dict_input_file = "id_filled_dict.csv", 
+                    output_file = "./output/word2vec.csv"):
     titles = pd.read_csv(title_input_file)
     genres = pd.read_csv(genre_input_file)
     filled_dict = pd.read_csv(dict_input_file)
